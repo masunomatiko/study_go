@@ -5,7 +5,7 @@ import (
 	"unicode"
 )
 
-func remove_dup_spaces(a []string) []string {
+func removeDupSpaces(a []string) []string {
 	var idx int
 	for _, s := range a {
 		if unicode.IsSpace([]rune(s)[0]) && a[idx] == " " {
@@ -25,6 +25,6 @@ func remove_dup_spaces(a []string) []string {
 
 func main() {
 	a := []string{"a", "b", "\n", "\n", "c", " "}
-	a = remove_dup_spaces(a)
+	a = removeDupSpaces(a)
 	fmt.Println(a)
 }

@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-func EncodeStringToSHA(b []byte, mode string) ([32]uint8, error) {
+func EncodeStringToSHA(b []byte, mode string) [32]uint8 {
 	sha := sha256.Sum256(b)
-	return sha, nil
+	return sha
 }
 
 func main() {
@@ -23,10 +23,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sha, err := EncodeStringToSHA(b, mode)
-	if err != nil {
-		log.Fatal(err)
-	}
+	sha := EncodeStringToSHA(b, mode)
+
 	fmt.Printf("%x\n", sha)
 
 }

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func remove_dups(a []string) []string {
+func removeDups(a []string) []string {
 	var idx int
 	for _, s := range a {
 		if a[idx] == s {

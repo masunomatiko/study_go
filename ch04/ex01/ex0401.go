@@ -2,6 +2,7 @@ package popcount
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -19,7 +20,8 @@ func ShiftPopCount(x uint8) int {
 
 func DiffBitCount(x, y []byte) (int, error) {
 	if len(x) != len(y) {
-		return 0, nil
+		err := errors.New("Array length doesnt match")
+		return 0, err
 	}
 
 	var cnt int
