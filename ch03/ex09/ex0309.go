@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -64,32 +63,31 @@ func (p *Params) set(values url.Values) {
 }
 
 func main() {
-	const (
-		width, height = 1024, 1024
-	)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		for name := range Params {
-			s := r.FormValue(name)
-			if s == "" {
-				continue
-			}
-			f, err := strconv.ParseFloat(s, 64)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("query param %s: %s", name, err), http.StatusBadRequest)
-				return
-			}
-			params[name] = f
-		}
-		if params["maxX"] <= params["minX"] || params["maxY"] <= params["minY"] {
-			http.Error(w, fmt.Sprintf("min coordinate greater than max"), http.StatusBadRequest)
-			return
-		}
-		minX := params["minX"]
-		maxX := params["maxX"]
-		minY := params["minY"]
-		maxY := params["maxY"]
-		zoom := params["zoom"]
+		p := new(Params)
+		p.set(r.URL.Query())
+		// for name := range Params {
+		// 	s := r.FormValue(name)
+		// 	if s == "" {
+		// 		continue
+		// 	}
+		// 	f, err := strconv.ParseFloat(s, 64)
+		// 	if err != nil {
+		// 		http.Error(w, fmt.Sprintf("query param %s: %s", name, err), http.StatusBadRequest)
+		// 		return
+		// 	}
+		// 	params[name] = f
+		// }
+		// if params["maxX"] <= params["minX"] || params["maxY"] <= params["minY"] {
+		// 	http.Error(w, fmt.Sprintf("min coordinate greater than max"), http.StatusBadRequest)
+		// 	return
+		// }
+		minX := p.minX
+		maxX := p.maxX
+		minY := p.minY
+		maxY := p.maxY
+		zoom := p.zoom
 
 		lenX := maxX - minX
 		midX := minX + lenX/2
@@ -102,9 +100,9 @@ func main() {
 
 		img := image.NewRGBA(image.Rect(0, 0, width, height))
 		for py := 0; py < height; py++ {
-			y := float64(py)/height*(maxY-minY) + minY
+			y := float64(py)/height*float64(maxY-minY) + float64(minY)
 			for px := 0; px < width; px++ {
-				x := float64(px)/width*(maxX-minX) + minX
+				x := float64(px)/width*float64(maxX-minX) + float64(minX)
 				z := complex(x, y)
 
 				img.Set(px, py, Mandelbrot(z))
