@@ -62,12 +62,6 @@ func isValid(vals []float64) bool {
 
 func getColor(az, bz, cz, dz float64) uint64 {
 	z := (az + bz + cz + dz) / 4
-	// b := uint32((1.0 - z) / (1.0 - -0.245) * 0xff)
-	// c := fmt.Sprintf("%X", 0xff0000-(b<<16)+b)
-	// for i := len(c); i < 6; i++ {
-	// 	c = "0" + c
-	// }
-	// return c
 
 	// redFactor -> 0..1, blueFactor 1..0
 	redFactor := (z + 1) * 0.5

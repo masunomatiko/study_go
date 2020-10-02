@@ -53,7 +53,7 @@ func f(x, y float64) float64 {
 
 func isValid(vals []float64) bool {
 	for _, v := range vals {
-		if math.IsInf(v, 0) {
+		if math.IsInf(v, 0) || math.IsInf(v, -0) || math.IsNaN(v) {
 			return false
 		}
 	}
