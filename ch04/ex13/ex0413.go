@@ -12,7 +12,6 @@ import (
 )
 
 const APIURL = "http://www.omdbapi.com/?"
-const apikey = "4dee881e"
 
 type Movie struct {
 	Title  string
@@ -27,7 +26,7 @@ func (m Movie) posterFilename() string {
 }
 
 func getMovie(title string) (movie Movie, err error) {
-	url := fmt.Sprintf("%st=%s&apikey=%s", APIURL, url.QueryEscape(title), apikey)
+	url := fmt.Sprintf("%st=%s&apikey=%s", APIURL, url.QueryEscape(title), os.Getenv("apikey"))
 	resp, err := http.Get(url)
 	if err != nil {
 		return
