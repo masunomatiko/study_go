@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"crypto/sha512"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +11,14 @@ import (
 )
 
 func EncodeStringToSHA(b []byte, mode string) [32]uint8 {
-	sha := sha256.Sum256(b)
+	switch mode {
+	case "256":
+		sha := sha256.Sum256(b)
+	case "512":
+		sha := sha512.Sum512(b)
+	default:
+		log.Fatal("unexpected mode")
+	}
 	return sha
 }
 
@@ -23,8 +31,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sha := EncodeStringToSHA(b, mode)
+	switch mode {
+	case "256":
+		sha := sha256.Sum256(b)
+		fmt.Printf("%x\n", sha)
 
-	fmt.Printf("%x\n", sha)
+	case "512":
+		sha := sha512.Sum512(b)
+		fmt.Printf("%x\n", sha)
+
+	default:
+		log.Fatal("unexpected mode")
+	}
 
 }
