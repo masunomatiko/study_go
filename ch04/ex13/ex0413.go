@@ -12,6 +12,7 @@ import (
 )
 
 const APIURL = "http://www.omdbapi.com/?"
+const apikey = "4dee881e"
 
 type Movie struct {
 	Title  string
@@ -21,19 +22,19 @@ type Movie struct {
 
 func (m Movie) posterFilename() string {
 	ext := filepath.Ext(m.Poster)
-	title := slugify.Marshal(m.Title)
+	title := m.Title
 	return fmt.Sprintf("%s_(%s)%s", title, m.Year, ext)
 }
 
 func getMovie(title string) (movie Movie, err error) {
-	url_ := fmt.Sprintf("%st=%s", APIURL, url.QueryEscape(title))
-	resp, err := http.Get(url_)
+	url := fmt.Sprintf("%st=%s&apikey=%s", APIURL, url.QueryEscape(title), apikey)
+	resp, err := http.Get(url)
 	if err != nil {
 		return
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		err = fmt.Errorf("%d response from %s", resp.StatusCode, url_)
+		err = fmt.Errorf("%d response from %s", resp.StatusCode, url)
 		return
 	}
 	err = json.NewDecoder(resp.Body).Decode(&movie)
@@ -44,14 +45,14 @@ func getMovie(title string) (movie Movie, err error) {
 }
 
 func (m Movie) writePoster() error {
-	url_ := m.Poster
-	resp, err := http.Get(url_)
+	url := m.Poster
+	resp, err := http.Get(url)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("%d response from %s", resp.StatusCode, url_)
+		return fmt.Errorf("%d response from %s", resp.StatusCode, url)
 	}
 	file, err := os.Create(m.posterFilename())
 	if err != nil {
@@ -79,11 +80,6 @@ func main() {
 	movie, err := getMovie(title)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	if zero := new(Movie); movie == *zero {
-		fmt.Fprintf(os.Stderr, "No results for '%s'\n", title)
-		os.Exit(2)
 	}
 
 	err = movie.writePoster()
