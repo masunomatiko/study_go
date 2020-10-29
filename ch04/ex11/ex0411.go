@@ -1,19 +1,24 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"errors"
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
 	"sort"
 	"strings"
 	"time"
 )
 
-const IssueURL = "https://api.github.com"
+const APIURL = "https://api.github.com"
 const DateFormat = "2020/09/29"
 
 type IssuesSearchResult struct {
@@ -35,9 +40,18 @@ type User struct {
 	HTMLURL string `json:html_url`
 }
 
+// for simplicity, only title is `required`
+// note: json is case-sensitive
+type NewIssue struct {
+	Title string `json:"title""`
+	Body  string `json:"body"`
+}
+
 func SearchIssues(terms []string) (*IssuesSearchResult, error) {
 	q := url.QueryEscape(strings.Join(terms, " "))
-	resp, err := http.Get(IssueURL + "/search/issues?q=" + q)
+	reqUrl := fmt.Sprintf("%s/masunomatiko/search/issues?q=%s", APIURL, q)
+
+	resp, err := http.Get(reqUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +69,8 @@ func SearchIssues(terms []string) (*IssuesSearchResult, error) {
 	return &result, nil
 }
 
-func ReadIssues(args []string) {
-	result, err := SearchIssues(args)
+func ReadIssues(q string) {
+	result, err := SearchIssues([]string{q})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,34 +102,155 @@ func ReadIssues(args []string) {
 	}
 }
 
-func CreateIssues(args []string) error {
-	resp, err := http.PostForm()
-		IssueURL+"/masunomatiko/study_go/issues/",
-		nil,
-	)
+func CreateIssues() error {
+
+	reqUrl := fmt.Sprintf("%s/masunomatiko/study_go/issues", APIURL)
+
+	tmpfile, err := ioutil.TempFile(os.TempDir(), "c_")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Invoke VSCode to fill in the body of the content")
+	cmd := exec.Command("code", tmpfile.Name())
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+
+	content, err := os.Open(tmpfile.Name())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	reqBody := bytes.NewBuffer(make([]byte, 128))
+
+	var issue NewIssue
+
+	reader := bufio.NewReader(content)
+	title, _ := reader.ReadString('\n')
+	issue.Title = strings.TrimSpace(title)
+
+	body := []byte{}
+	b, e := reader.ReadByte()
+	for e == nil {
+		body = append(body, b)
+		b, e = reader.ReadByte()
+	}
+	issue.Body = string(body)
+
+	data, err := json.Marshal(issue)
+	if err != nil {
+		log.Fatalf("JSON marshaling failed: %s", err)
+	}
+
+	reqBody = bytes.NewBuffer(data)
+
+	req, err := http.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		log.Fatalf("Create new request failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	req.SetBasicAuth(os.Getenv("USERNAME"), os.Getenv("PASSWORD"))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}
-	if resp.Status != http.StatusCreated {
+	if resp.StatusCode != http.StatusCreated {
 		return err
 	}
 	return nil
-
 }
 
 func UpdateIssues(issueNum string) error {
-	resp, err := http.PostForm(
-		IssueURL+"/masunomatiko/study_go/issues/"+string(issueNum),
-		nil,
-	)
+	reqUrl := fmt.Sprintf("%s/masunomatiko/study_go/issues/%d", APIURL, issueNum)
+	resp, err := http.Get(reqUrl)
 	if err != nil {
 		return err
 	}
+
+	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
+		return fmt.Errorf("search query failed: %s", err)
+	}
+	var result Issues
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		resp.Body.Close()
+		return err
+	}
+
+	tmpfile, err := ioutil.TempFile(os.TempDir(), "c_")
+	if err != nil {
+		log.Fatal(err)
+	}
+	tmpfile.WriteString(result.Title)
+	tmpfile.Write([]byte("\n"))
+	tmpfile.WriteString(result.Body)
+	tmpfile.Close()
+
+	fmt.Println("Invoke VSCode to fill in the body of the content")
+	cmd := exec.Command("code", tmpfile.Name())
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	if err := cmd.Run(); err != nil {
+		log.Fatal(err)
+	}
+	content, err := os.Open(tmpfile.Name())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	reqBody := bytes.NewBuffer(make([]byte, 128))
+
+	var issue NewIssue
+
+	reader := bufio.NewReader(content)
+	title, _ := reader.ReadString('\n')
+	issue.Title = strings.TrimSpace(title)
+
+	body := []byte{}
+	b, e := reader.ReadByte()
+	for e == nil {
+		body = append(body, b)
+		b, e = reader.ReadByte()
+	}
+	issue.Body = string(body)
+
+	data, err := json.Marshal(issue)
+	if err != nil {
+		log.Fatalf("JSON marshaling failed: %s", err)
+	}
+
+	reqBody = bytes.NewBuffer(data)
+
+	req, err := http.NewRequest("POST", reqUrl, reqBody)
+	if err != nil {
+		log.Fatalf("Create new request failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	req.SetBasicAuth(os.Getenv("USERNAME"), os.Getenv("PASSWORD"))
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err = http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	if resp.StatusCode != http.StatusCreated {
+		return err
+	}
+	return nil
 }
 
 func CloseIssues(issueNum string) error {
+	reqUrl := fmt.Sprintf("%s/masunomatiko/study_go/issues/%s", APIURL, issueNum)
+
 	resp, err := http.PostForm(
-		IssueURL+"/masunomatiko/study_go/issues/"+string(issueNum),
+		reqUrl,
 		url.Values{"state": {"closed"}},
 	)
 	if err != nil {
@@ -130,6 +265,25 @@ func CloseIssues(issueNum string) error {
 }
 
 func main() {
-	args := os.Args[1:]
+	var mode string
+	var issueNum string
+	var title string
 
+	flag.Parse()
+	flag.StringVar(&mode, "m", "", "create/read/update/delete")
+	flag.StringVar(&issueNum, "i", "", "issueNum")
+	flag.StringVar(&title, "t", "", "title")
+
+	switch mode {
+	case "create":
+		CreateIssues()
+	case "read":
+		ReadIssues(title)
+	case "update":
+		UpdateIssues(issueNum)
+	case "delete":
+		CloseIssues(issueNum)
+	default:
+		log.Fatal("select mode to use api")
+	}
 }
