@@ -1,9 +1,16 @@
-package main
+package ex0516
 
-func join(elems ...string) string {
-	out := ""
-	for _, e := range elems {
-		out += e
+import "bytes"
+
+func join(sep string, strs ...string) string {
+	if len(strs) == 0 {
+		return ""
 	}
-	return out
+	b := bytes.Buffer{}
+	for _, s := range strs[:len(strs)-1] {
+		b.WriteString(s)
+		b.WriteString(sep)
+	}
+	b.WriteString(strs[len(strs)-1])
+	return b.String()
 }
