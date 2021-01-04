@@ -1,4 +1,8 @@
-package bank
+package main
+
+import (
+	"fmt"
+)
 
 var deposits = make(chan int) // send amount to deposit
 var balances = make(chan int) // receive balance
@@ -30,6 +34,44 @@ func teller() {
 	}
 }
 
-func init() {
+// func init() {
+
+// }
+
+func main() {
 	go teller() // start the monitor goroutine
+	done := make(chan struct{})
+
+	// Alice
+	go func() {
+		Deposit(200)
+		done <- struct{}{}
+	}()
+
+	// Bob
+	go func() {
+		Deposit(100)
+		done <- struct{}{}
+	}()
+
+	// Wait for both transactions.
+	<-done
+	<-done
+
+	// withdraw test
+	// Lana
+	go func() {
+		fmt.Println(WithDraw(150))
+		done <- struct{}{}
+	}()
+	<-done
+
+	// Tom
+	go func() {
+		fmt.Println(WithDraw(200))
+		done <- struct{}{}
+	}()
+	<-done
+	balance := Balance()
+	fmt.Println(balance)
 }
