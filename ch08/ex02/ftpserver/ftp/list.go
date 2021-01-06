@@ -21,6 +21,7 @@ func (c *Conn) list(args []string) {
 		c.respond(status550)
 		return
 	}
+	c.respond(status150)
 
 	dataConn, err := c.dataConnect()
 	if err != nil {
@@ -30,13 +31,17 @@ func (c *Conn) list(args []string) {
 	defer dataConn.Close()
 
 	for _, file := range files {
-		// lsしたときのファイル名表示
-		_, err := fmt.Fprint(dataConn, file.Name(), "/n")
+		_, err := fmt.Fprint(dataConn, file.Name(), "\n")
 		if err != nil {
 			log.Print(err)
 			c.respond(status426)
 		}
 	}
+	// _, err = fmt.Fprintf(dataConn, c.EOL())
+	// if err != nil {
+	// 	log.Print(err)
+	// 	c.respond(status426)
+	// }
 
 	c.respond(status226)
 }

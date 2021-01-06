@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	// status150 = "150 File status okay; about to open data connection."
+	status150 = "150 File status okay; about to open data connection."
 	status200 = "200 Command okay."
 	// status220 = "220 Service ready for new user."
 	// status221 = "221 Service closing control connection."
