@@ -10,9 +10,8 @@ func (c *Conn) lprt(args []string) {
 	dataPort, err := dataPortFromHostPort(args[0])
 	if err != nil {
 		log.Print(err)
-		c.respond(status501)
+		c.respond(status425)
 		return
 	}
 	c.dataPort = dataPort
-	c.respond(status200)
 }

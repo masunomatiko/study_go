@@ -21,5 +21,4 @@ func (c *Conn) cwd(args []string) {
 		return
 	}
 	c.workDir = workDir
-	c.respond(status200)
 }

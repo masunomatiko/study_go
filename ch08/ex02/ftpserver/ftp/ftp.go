@@ -1,4 +1,3 @@
-// Package ftp provides structs and functions for running an FTP server.
 package ftp
 
 import (
@@ -7,7 +6,6 @@ import (
 	"strings"
 )
 
-// Serve scans incoming requests for valid commands and routes them to handler functions.
 func Serve(c *Conn) {
 	c.respond(status220)
 
@@ -29,13 +27,13 @@ func Serve(c *Conn) {
 			c.lprt(args)
 		case "USER":
 			c.user(args)
-		case "QUIT": // close
-			c.respond(status221)
+		case "QUIT": // close: QUITコマンドに対するメッセージ送信
+			c.respond("221 Service closing control connection.")
 			return
 		case "RETR": // get
 			c.retr(args)
 		default:
-			c.respond(status502)
+			c.respond("This command is not implemented")
 		}
 	}
 	if s.Err() != nil {

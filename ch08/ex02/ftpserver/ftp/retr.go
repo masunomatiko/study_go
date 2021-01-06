@@ -34,6 +34,6 @@ func (c *Conn) retr(args []string) {
 		c.respond(status426)
 		return
 	}
-	io.WriteString(dataConn, c.EOL())
+	io.WriteString(dataConn, "\n")
 	c.respond(status226)
 }
