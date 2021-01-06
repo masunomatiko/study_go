@@ -24,7 +24,7 @@ type dataPort struct {
 func dataPortFromHostPort(hostPort string) (*dataPort, error) {
 	var dp dataPort
 	// PORTじゃなくてLPRTしか使えない
-	_, err := fmt.Sscanf(hostPort, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+	_, err := fmt.Sscanf(hostPort, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
 		&dp.protocol, &dp.addrLength, &dp.h1, &dp.h2, &dp.h3, &dp.h4, &dp.h5, &dp.h6, &dp.h7, &dp.h8, &dp.h9, &dp.h10, &dp.h11, &dp.h12, &dp.h13, &dp.h14, &dp.h15, &dp.h16, &dp.portLength, &dp.p1, &dp.p2)
 	if err != nil {
 		return nil, err
