@@ -35,5 +35,5 @@ func (c *Conn) retr(args []string) {
 		return
 	}
 	io.WriteString(dataConn, "\n")
-	c.respond(status226)
+	c.respond(status200)
 }

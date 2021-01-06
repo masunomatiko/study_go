@@ -37,5 +37,5 @@ func (c *Conn) list(args []string) {
 			c.respond(status426)
 		}
 	}
-	c.respond(status226)
+	c.respond(status200)
 }
