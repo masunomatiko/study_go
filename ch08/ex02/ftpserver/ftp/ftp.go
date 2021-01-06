@@ -18,7 +18,7 @@ func Serve(c *Conn) {
 			continue
 		}
 		command, args := input[0], input[1:]
-		log.Printf("<< %s", command)
+		log.Printf("<< %s %v", command, args)
 
 		switch command {
 		case "CWD": // cd
