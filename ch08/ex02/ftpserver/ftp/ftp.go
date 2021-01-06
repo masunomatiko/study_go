@@ -7,7 +7,7 @@ import (
 )
 
 func Serve(c *Conn) {
-	c.respond(status220)
+	c.respond("220 Service ready for new user.")
 
 	s := bufio.NewScanner(c.conn)
 	for s.Scan() {

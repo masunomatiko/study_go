@@ -37,11 +37,6 @@ func (c *Conn) list(args []string) {
 			c.respond(status426)
 		}
 	}
-	// _, err = fmt.Fprintf(dataConn, c.EOL())
-	// if err != nil {
-	// 	log.Print(err)
-	// 	c.respond(status426)
-	// }
 
 	c.respond(status226)
 }

@@ -6,5 +6,5 @@ import (
 )
 
 func (c *Conn) user(args []string) {
-	c.respond(fmt.Sprintf(status230, strings.Join(args, " ")))
+	c.respond(fmt.Sprintf("230 User %s logged in, proceed.", strings.Join(args, " ")))
 }
