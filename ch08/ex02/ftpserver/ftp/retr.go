@@ -19,7 +19,7 @@ func (c *Conn) retr(args []string) {
 		log.Print(err)
 		c.respond(status550)
 	}
-	c.respond(status150)
+	// c.respond(status150)
 
 	dataConn, err := c.dataConnect()
 	if err != nil {
