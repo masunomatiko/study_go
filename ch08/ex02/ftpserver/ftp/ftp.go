@@ -34,8 +34,8 @@ func Serve(c *Conn) {
 			return
 		case "RETR": // get
 			c.retr(args)
-		case "TYPE":
-			c.setDataType(args)
+		// case "TYPE":
+		// 	c.setDataType(args)
 		default:
 			c.respond(status502)
 		}

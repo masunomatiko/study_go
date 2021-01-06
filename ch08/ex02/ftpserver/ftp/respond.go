@@ -23,7 +23,6 @@ const (
 // respond copies a string to the client and terminates it with the appropriate FTP line terminator
 // for the datatype.
 func (c *Conn) respond(s string) {
-	// log.Print(">> ", s)
 	_, err := fmt.Fprint(c.conn, s, c.EOL())
 	if err != nil {
 		log.Print(err)
