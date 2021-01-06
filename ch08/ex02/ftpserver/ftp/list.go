@@ -21,7 +21,7 @@ func (c *Conn) list(args []string) {
 		c.respond(status550)
 		return
 	}
-	c.respond(status150)
+	c.respond("150 File status okay; about to open data connection.")
 
 	dataConn, err := c.dataConnect()
 	if err != nil {
@@ -37,11 +37,5 @@ func (c *Conn) list(args []string) {
 			c.respond(status426)
 		}
 	}
-	// _, err = fmt.Fprintf(dataConn, c.EOL())
-	// if err != nil {
-	// 	log.Print(err)
-	// 	c.respond(status426)
-	// }
-
 	c.respond(status226)
 }
