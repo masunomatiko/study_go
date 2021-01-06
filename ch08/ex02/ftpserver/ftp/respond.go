@@ -20,7 +20,7 @@ const (
 	status550 = "550 Requested action not taken. File unavailable."
 )
 
-// type dataType int
+type dataType int
 
 const (
 	ascii dataType = iota
