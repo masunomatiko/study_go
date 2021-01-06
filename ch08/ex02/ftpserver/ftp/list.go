@@ -31,7 +31,7 @@ func (c *Conn) list(args []string) {
 
 	for _, file := range files {
 		// lsしたときのファイル名表示
-		_, err := fmt.Fprint(dataConn, file.Name(), "\n")
+		_, err := fmt.Fprint(dataConn, file.Name(), "/n")
 		if err != nil {
 			log.Print(err)
 			c.respond(status426)
@@ -43,4 +43,5 @@ func (c *Conn) list(args []string) {
 	// 	c.respond(status426)
 	// }
 
+	c.respond(status226)
 }

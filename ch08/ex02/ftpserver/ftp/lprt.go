@@ -14,4 +14,5 @@ func (c *Conn) lprt(args []string) {
 		return
 	}
 	c.dataPort = dataPort
+	c.respond(status200)
 }
