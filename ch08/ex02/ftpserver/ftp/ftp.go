@@ -25,8 +25,8 @@ func Serve(c *Conn) {
 			c.cwd(args)
 		case "LIST": // ls
 			c.list(args)
-		case "PORT":
-			c.port(args)
+		case "LPRT":
+			c.lprt(args)
 		case "USER":
 			c.user(args)
 		case "QUIT": // close

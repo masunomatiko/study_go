@@ -1,8 +1,3 @@
-// Implement a concurrent File Transfer Protocol (FTP) server. The server should interpret commands
-// from each client such as cd to change directory, ls to list a directory, get to send the contents
-// of a file, and close to close the connection.
-//
-// Thanks to Kdama for the solution that got me going https://github.com/kdama/gopl/blob/master/ch08/ex02/main.go
 package main
 
 import (
@@ -12,7 +7,7 @@ import (
 	"net"
 	"path/filepath"
 
-	"github.com/progfay/go-training/ch08/ex02/ftpserver/ftp"
+	"github.com/masunomatiko/study_go/ch08/ex02/ftpserver/ftp"
 )
 
 var port int
@@ -20,7 +15,7 @@ var rootDir string
 
 func init() {
 	flag.IntVar(&port, "port", 8080, "port number")
-	flag.StringVar(&rootDir, "rootDir", "public", "root directory")
+	flag.StringVar(&rootDir, "rootDir", "sample", "root directory")
 	flag.Parse()
 }
 

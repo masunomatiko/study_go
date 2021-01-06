@@ -2,7 +2,7 @@ package ftp
 
 import "log"
 
-func (c *Conn) port(args []string) {
+func (c *Conn) lprt(args []string) {
 	if len(args) != 1 {
 		c.respond(status501)
 		return
