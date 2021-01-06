@@ -20,6 +20,13 @@ const (
 	status550 = "550 Requested action not taken. File unavailable."
 )
 
+// type dataType int
+
+const (
+	ascii dataType = iota
+	binary
+)
+
 // respond copies a string to the client and terminates it with the appropriate FTP line terminator
 // for the datatype.
 func (c *Conn) respond(s string) {
