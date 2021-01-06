@@ -25,7 +25,6 @@ func (c *Conn) list(args []string) {
 
 	dataConn, err := c.dataConnect()
 	if err != nil {
-		fmt.Print(err)
 		c.respond(status425)
 		return
 	}

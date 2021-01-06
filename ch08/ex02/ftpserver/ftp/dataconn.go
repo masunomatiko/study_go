@@ -38,6 +38,7 @@ func (d *dataPort) toAddress() string {
 	}
 	// 実際のポート番号　＝　nnn × 256 + mmm
 	port := d.p1<<8 + d.p2
+	// IPv6がわからなくて挫折した。あとでやる。
 	// return fmt.Sprintf("%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d.%d:%d", d.h1, d.h2, d.h3, d.h4, d.h5, d.h6, d.h7, d.h8, d.h9, d.h10, d.h11, d.h12, d.h13, d.h14, d.h15, d.h16, port)
 	return fmt.Sprintf("[0:0:0:0:0:0:0:1]:%d", port)
 
