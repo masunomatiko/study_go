@@ -7,12 +7,12 @@ func (c *Conn) lprt(args []string) {
 		c.respond(status501)
 		return
 	}
-	dataPort, err := dataPortFromHostPort(args[0])
+	longIP, err := longIPFromHostPort(args[0])
 	if err != nil {
 		log.Print(err)
 		c.respond(status425)
 		return
 	}
-	c.dataPort = dataPort
+	c.longIP = longIP
 	c.respond(status200)
 }

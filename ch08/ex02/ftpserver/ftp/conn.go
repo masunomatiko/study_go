@@ -2,11 +2,10 @@ package ftp
 
 import "net"
 
-// Conn represents a connection to the FTP server
+// Connection to the FTP server
 type Conn struct {
 	conn     net.Conn
-	dataType dataType
-	dataPort *dataPort
+	longIP *longIP
 	rootDir  string
 	workDir  string
 }
