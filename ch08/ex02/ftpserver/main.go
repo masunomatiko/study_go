@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net"
@@ -10,14 +9,11 @@ import (
 	"ftpserver/ftp"
 )
 
-var port int
-var rootDir string
-
-func init() {
-	flag.IntVar(&port, "port", 8080, "port number")
-	flag.StringVar(&rootDir, "rootDir", "sample", "root directory")
-	flag.Parse()
-}
+const (
+	port    = 8080
+	rootDir = "sample"
+	workDir = "/"
+)
 
 func main() {
 	server := fmt.Sprintf(":%d", port)
