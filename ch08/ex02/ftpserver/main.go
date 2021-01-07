@@ -7,7 +7,7 @@ import (
 	"net"
 	"path/filepath"
 
-	"github.com/masunomatiko/study_go/ch08/ex02/ftpserver/ftp"
+	"ftpserver/ftp"
 )
 
 var port int
