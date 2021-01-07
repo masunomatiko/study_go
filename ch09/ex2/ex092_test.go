@@ -19,12 +19,6 @@ func BenchmarkPopCountOrigin(b *testing.B) {
 	}
 }
 
-// func init() {
-// 	for i := range pc {
-// 		pc[i] = pc[i/2] + byte(i&1)
-// 	}
-// }
-
 func LoopPopCount(x uint64) int {
 	var cnt int
 

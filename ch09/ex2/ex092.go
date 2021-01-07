@@ -3,7 +3,7 @@ package popcount
 import "sync"
 
 var pc [256]byte
-var load sync.Once
+var loadTableOnce sync.Once
 
 func PopCount(x uint64) int {
 	pc := Table()
@@ -11,11 +11,11 @@ func PopCount(x uint64) int {
 }
 
 func Table() [256]byte {
-	load.Do(initPC)
+	loadTableOnce.Do(loadTable)
 	return pc
 }
 
-func initPC() {
+func loadTable() {
 	for i := range pc {
 		pc[i] = pc[i/2] + byte(i&1)
 	}
