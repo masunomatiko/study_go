@@ -19,7 +19,7 @@ func (c *Conn) retr(args []string) {
 		log.Print(err)
 		c.respond(status550)
 	}
-	// c.respond(status150)
+	c.respond("150 File status okay; about to open data connection.")
 
 	dataConn, err := c.dataConnect()
 	if err != nil {
