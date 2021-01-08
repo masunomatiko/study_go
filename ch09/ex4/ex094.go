@@ -35,5 +35,5 @@ func main() {
 	x <- 1
 	<-y
 	close(x)
-	fmt.Printf("%d goryines, %fs\n", stageLimit, time.Since(s).Seconds())
+	fmt.Printf("%d goroutines, %fs\n", stageLimit, time.Since(s).Seconds())
 }
