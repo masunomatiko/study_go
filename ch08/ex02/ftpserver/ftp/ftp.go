@@ -19,6 +19,8 @@ func Serve(c *Conn) {
 		log.Printf("<< %s %v", command, args)
 
 		switch command {
+		case "PWD": // pwd
+			c.pwd()
 		case "CWD": // cd
 			c.cwd(args)
 		case "LIST": // ls
@@ -32,6 +34,8 @@ func Serve(c *Conn) {
 			return
 		case "RETR": // get
 			c.retr(args)
+		case "STOR": // put
+			c.stor(args)
 		default:
 			c.respond("This command is not implemented")
 		}
