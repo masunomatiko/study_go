@@ -16,10 +16,13 @@ func (c *Conn) stor(args []string) {
 	fname := args[0]
 
 	file, err := os.Create(fname)
+	if err != nil {
+		c.respond(status550)
+	}
 	defer dataConn.Close()
 	_, err = io.Copy(dataConn, file)
 	if err != nil {
-		c.respond(status426)
+		c.respond("450 File unavailable.")
 	}
 
 	c.respond(status200)
