@@ -14,8 +14,6 @@ const (
 	status550 = "550 Requested action not taken. File unavailable."
 )
 
-type dataType int
-
 func (c *Conn) respond(s string) {
 	_, err := fmt.Fprint(c.conn, s, "\n")
 	if err != nil {

@@ -17,7 +17,7 @@ func (c *Conn) retr(args []string) {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Print(err)
-		c.respond(status501)
+		c.respond(status550)
 	}
 	c.respond("150 File status okay; about to open data connection.")
 
