@@ -16,6 +16,7 @@ func (c *Conn) pwd() {
 	defer dataConn.Close()
 
 	absPath := filepath.Join(c.rootDir, c.workDir)
+	fmt.Print(absPath)
 	_, err = fmt.Fprint(dataConn, absPath, "\n")
 	if err != nil {
 		log.Print(err)
