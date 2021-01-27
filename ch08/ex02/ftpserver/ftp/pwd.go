@@ -3,6 +3,7 @@ package ftp
 import (
 	"fmt"
 	"log"
+	"path/filepath"
 )
 
 func (c *Conn) pwd() {
@@ -14,8 +15,8 @@ func (c *Conn) pwd() {
 	}
 	defer dataConn.Close()
 
-	fmt.Println(c.workDir)
-	_, err = fmt.Fprint(dataConn, c.workDir, "\n")
+	absPath := filepath.Join(c.rootDir, c.workDir)
+	_, err = fmt.Fprint(dataConn, absPath, "\n")
 	if err != nil {
 		log.Print(err)
 		c.respond(status426)

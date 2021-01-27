@@ -3,6 +3,7 @@ package ftp
 import (
 	"io"
 	"os"
+	"path/filepath"
 )
 
 func (c *Conn) stor(args []string) {
@@ -15,7 +16,7 @@ func (c *Conn) stor(args []string) {
 	}
 	fname := args[0]
 
-	file, err := os.Create(fname)
+	file, err := os.Create(filepath.Join(c.rootDir, c.workDir, fname))
 	if err != nil {
 		c.respond(status550)
 	}
