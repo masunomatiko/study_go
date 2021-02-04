@@ -14,13 +14,13 @@ func Pack(ptr interface{}) (url.URL, error) {
 	}
 	vals := &url.Values{}
 	for i := 0; i < v.NumField(); i++ {
-		path := v.Type().Field(i)
-		tag := path.Tag
-		param := tag.Get("http")
-		if param == "" {
-			param = strings.ToLower(path.Name)
+		fieldInfo := v.Type().Field(i)
+		tag := fieldInfo.Tag
+		name := tag.Get("http")
+		if name == "" {
+			name = strings.ToLower(fieldInfo.Name)
 		}
-		vals.Add(param, fmt.Sprintf("%v", v.Field(i)))
+		vals.Add(name, fmt.Sprintf("%v", v.Field(i)))
 	}
 	return url.URL{RawQuery: vals.Encode()}, nil
 }
