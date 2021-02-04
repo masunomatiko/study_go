@@ -10,17 +10,17 @@ import (
 func Pack(ptr interface{}) (url.URL, error) {
 	v := reflect.ValueOf(ptr).Elem()
 	if v.Type().Kind() != reflect.Struct {
-		return url.URL{}, fmt.Errorf("pack: %v is not a struct", ptr)
+		return url.URL{}, fmt.Errorf("Pack(%v): got %T want struct", ptr, ptr)
 	}
 	vals := &url.Values{}
 	for i := 0; i < v.NumField(); i++ {
-		fieldInfo := v.Type().Field(i)
-		tag := fieldInfo.Tag
-		name := tag.Get("http")
-		if name == "" {
-			name = strings.ToLower(fieldInfo.Name)
+		path := v.Type().Field(i)
+		tag := path.Tag
+		param := tag.Get("http")
+		if param == "" {
+			param = strings.ToLower(path.Name)
 		}
-		vals.Add(name, fmt.Sprintf("%v", v.Field(i)))
+		vals.Add(param, fmt.Sprintf("%v", v.Field(i)))
 	}
 	return url.URL{RawQuery: vals.Encode()}, nil
 }
