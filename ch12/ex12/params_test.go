@@ -25,11 +25,11 @@ func TestUnpack(t *testing.T) {
 		expect Params
 	}{
 		{
-			&http.Request{Form: url.Values{"p": []string{"120"}}},
+			&http.Request{Form: url.Values{"e": []string{"example"}}},
 			Params{"example.email.com"},
 		},
 		{
-			&http.Request{Form: url.Values{"p": []string{"80"}}},
+			&http.Request{Form: url.Values{"e": []string{"example.email.com"}}},
 			Params{"example.email.com"},
 		},
 	}
